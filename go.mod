@@ -5,7 +5,7 @@ go 1.25.6
 require (
 	github.com/jackc/pgx/v5 v5.8.0
 	github.com/joho/godotenv v1.5.1
-	github.com/puriice/httplibs v1.1.7
+	github.com/puriice/httplibs v1.3.3
 )
 
 require (

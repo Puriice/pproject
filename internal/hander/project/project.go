@@ -8,16 +8,17 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/puriice/httplibs/pkg/json"
+	"github.com/puriice/pProject/internal/repository"
 	"github.com/puriice/pProject/internal/types"
 )
 
 type Handler struct {
-	model types.ProjectModel
+	repo repository.ProjectRepository
 }
 
-func NewHandler(model types.ProjectModel) *Handler {
+func NewHandler(model repository.ProjectRepository) *Handler {
 	return &Handler{
-		model: model,
+		repo: model,
 	}
 }
 
@@ -43,7 +44,7 @@ func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := h.model.CreateProject(r.Context(), &payload)
+	response, err := h.repo.CreateProject(r.Context(), &payload)
 
 	if err != nil {
 		var pgErr *pgconn.PgError
@@ -72,7 +73,7 @@ func (h *Handler) handleProjectQueryByID(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	project, err := h.model.QueryProjectByID(r.Context(), id)
+	project, err := h.repo.QueryProjectByID(r.Context(), id)
 
 	if err != nil {
 		switch {
@@ -96,7 +97,7 @@ func (h *Handler) handleProjectQueryByName(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	project, err := h.model.QueryProjectByName(r.Context(), name)
+	project, err := h.repo.QueryProjectByName(r.Context(), name)
 
 	if err != nil {
 		switch {
@@ -133,14 +134,14 @@ func (h *Handler) handleProjectUpdating(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = h.model.UpdateProject(r.Context(), id, payload)
+	err = h.repo.UpdateProject(r.Context(), id, payload)
 
 	if err == nil {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
-	if errors.Is(err, ErrNotFound) {
+	if errors.Is(err, types.ErrNotFound) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -157,14 +158,14 @@ func (h *Handler) handleProjectDeletion(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err := h.model.DeleteProject(r.Context(), id)
+	err := h.repo.DeleteProject(r.Context(), id)
 
 	if err == nil {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
-	if errors.Is(err, ErrNotFound) {
+	if errors.Is(err, types.ErrNotFound) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

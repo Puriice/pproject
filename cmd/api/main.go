@@ -3,8 +3,10 @@ package main
 import (
 	"log"
 
+	"github.com/puriice/httplibs/pkg/db"
+	"github.com/puriice/httplibs/pkg/server"
 	"github.com/puriice/pProject/internal/env"
-	"github.com/puriice/pProject/internal/server"
+	"github.com/puriice/pProject/pkg/project"
 )
 
 func main() {
@@ -12,13 +14,15 @@ func main() {
 
 	host := env.GetEnv("HOST", "localhost")
 	port := env.GetEnv("PORT", "8080")
-
-	serv, err := server.NewServer(host, port)
+	database, err := db.NewDatabase()
 
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 
-	server.Start(serv)
+	serv := server.NewServer(host, port, database)
+
+	project.Register(serv)
+
+	serv.Start()
 }
