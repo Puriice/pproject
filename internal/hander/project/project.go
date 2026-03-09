@@ -7,18 +7,23 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/puriice/httplibs/pkg/json"
+	"github.com/puriice/golibs/pkg/json"
+	"github.com/puriice/golibs/pkg/messaging"
 	"github.com/puriice/pProject/internal/repository"
 	"github.com/puriice/pProject/internal/types"
+	"github.com/puriice/pProject/pkg/model"
+	"github.com/puriice/pProject/pkg/sdk"
 )
 
 type Handler struct {
-	repo repository.ProjectRepository
+	repo   repository.ProjectRepository
+	broker *messaging.RabbitMQ
 }
 
-func NewHandler(model repository.ProjectRepository) *Handler {
+func NewHandler(model repository.ProjectRepository, broker *messaging.RabbitMQ) *Handler {
 	return &Handler{
-		repo: model,
+		repo:   model,
+		broker: broker,
 	}
 }
 
@@ -62,6 +67,10 @@ func (h *Handler) handleProjectCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.broker.Publish(sdk.ProjectCreate, &sdk.ProjectEvent{
+		EventType: sdk.ProjectCreate,
+		Project:   response,
+	})
 	json.SendJSON(w, http.StatusCreated, response)
 }
 
@@ -137,6 +146,16 @@ func (h *Handler) handleProjectUpdating(w http.ResponseWriter, r *http.Request) 
 	err = h.repo.UpdateProject(r.Context(), id, payload)
 
 	if err == nil {
+
+		h.broker.Publish(sdk.ProjectUpdate, &sdk.ProjectEvent{
+			EventType: sdk.ProjectUpdate,
+			Project: &model.Project{
+				ID:          &id,
+				Name:        payload.Name,
+				Description: payload.Description,
+				Picture:     payload.Picture,
+			},
+		})
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
@@ -161,6 +180,12 @@ func (h *Handler) handleProjectDeletion(w http.ResponseWriter, r *http.Request) 
 	err := h.repo.DeleteProject(r.Context(), id)
 
 	if err == nil {
+		h.broker.Publish(sdk.ProjectDelete, &sdk.ProjectEvent{
+			EventType: sdk.ProjectDelete,
+			Project: &model.Project{
+				ID: &id,
+			},
+		})
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}

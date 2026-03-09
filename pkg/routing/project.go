@@ -1,20 +1,21 @@
-package project
+package routing
 
 import (
 	"net/http"
 
-	"github.com/puriice/httplibs/pkg/middleware"
-	"github.com/puriice/httplibs/pkg/middleware/cors"
-	"github.com/puriice/httplibs/pkg/server"
+	"github.com/puriice/golibs/pkg/messaging"
+	"github.com/puriice/golibs/pkg/middleware"
+	"github.com/puriice/golibs/pkg/middleware/cors"
+	"github.com/puriice/golibs/pkg/server"
 	"github.com/puriice/pProject/internal/hander/project"
 	"github.com/puriice/pProject/internal/repository"
 )
 
-func Register(s *server.Server) {
+func Register(s *server.Server, broker *messaging.RabbitMQ) {
 	router := http.NewServeMux()
 
 	projectModel := repository.NewPostgresProjectRepository(s.Database)
-	projectHandler := project.NewHandler(projectModel)
+	projectHandler := project.NewHandler(projectModel, broker)
 
 	projectHandler.RegisterRoute(router)
 

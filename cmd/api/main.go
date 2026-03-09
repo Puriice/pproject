@@ -3,17 +3,19 @@ package main
 import (
 	"log"
 
-	"github.com/puriice/httplibs/pkg/db"
-	"github.com/puriice/httplibs/pkg/server"
-	"github.com/puriice/pProject/internal/env"
-	"github.com/puriice/pProject/pkg/project"
+	"github.com/puriice/golibs/pkg/db"
+	"github.com/puriice/golibs/pkg/env"
+	"github.com/puriice/golibs/pkg/messaging"
+	"github.com/puriice/golibs/pkg/server"
+	"github.com/puriice/pProject/pkg/routing"
+	"github.com/puriice/pProject/pkg/sdk"
 )
 
 func main() {
-	env.InitEnv()
+	env.Init()
 
-	host := env.GetEnv("HOST", "localhost")
-	port := env.GetEnv("PORT", "8080")
+	host := env.Get("HOST", "localhost")
+	port := env.Get("PORT", "8080")
 	database, err := db.NewDatabase()
 
 	if err != nil {
@@ -21,8 +23,13 @@ func main() {
 	}
 
 	serv := server.NewServer(host, port, database)
+	broker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), sdk.ExchangeName)
 
-	project.Register(serv)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	routing.Register(serv, broker)
 
 	serv.Start()
 }
