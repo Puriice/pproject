@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/puriice/golibs/pkg/env"
@@ -26,7 +27,13 @@ func onError(err error) {
 }
 
 func main() {
-	broker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), pproject.ExchangeName)
+	rabbit, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	broker, err := rabbit.Broker(pproject.ExchangeName)
 
 	if err != nil {
 		log.Fatal(err)
@@ -47,7 +54,7 @@ func main() {
 
 	forever := make(chan struct{})
 
-	listener.Subscribe()
+	listener.Subscribe(context.Background())
 
 	<-forever
 }

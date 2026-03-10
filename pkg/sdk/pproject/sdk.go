@@ -16,9 +16,8 @@ const (
 )
 
 type ProjectService struct {
-	url      string
-	broker   *messaging.RabbitMQ
-	listener *messaging.RabbitListener
+	url    string
+	broker *messaging.RabbitBroker
 }
 
 const (
@@ -39,7 +38,7 @@ type ProjectEvent struct {
 	EventType string `json:"event"`
 }
 
-func NewService(httpURL string, broker *messaging.RabbitMQ) *ProjectService {
+func NewService(httpURL string, broker *messaging.RabbitBroker) ProjectService {
 	var sb strings.Builder
 
 	sb.Grow(len(httpURL) + slashAPISlashVersionOneSlashProjectLength)
@@ -51,7 +50,7 @@ func NewService(httpURL string, broker *messaging.RabbitMQ) *ProjectService {
 
 	sb.WriteString("api/v1/projects")
 
-	return &ProjectService{
+	return ProjectService{
 		url:    sb.String(),
 		broker: broker,
 	}

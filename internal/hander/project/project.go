@@ -17,10 +17,10 @@ import (
 
 type Handler struct {
 	repo   repository.ProjectRepository
-	broker *messaging.RabbitMQ
+	broker *messaging.RabbitBroker
 }
 
-func NewHandler(model repository.ProjectRepository, broker *messaging.RabbitMQ) *Handler {
+func NewHandler(model repository.ProjectRepository, broker *messaging.RabbitBroker) *Handler {
 	return &Handler{
 		repo:   model,
 		broker: broker,

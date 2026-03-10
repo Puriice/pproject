@@ -17,6 +17,10 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/puriice/golibs v1.4.2 h1:vWEPtzQWl3LPL2mID4G62KX5zeHcFBJkDG17Fuk8S40=
 github.com/puriice/golibs v1.4.2/go.mod h1:NRCyQbkci6Zk29ZcQh3fA98/mEQvqL7s+o4PlVM568Y=
+github.com/puriice/golibs v1.4.4 h1:YNlhrvSt7bsNYV0Envb/eoNqFD7Un2jWjVHf7DQ1aIM=
+github.com/puriice/golibs v1.4.4/go.mod h1:NRCyQbkci6Zk29ZcQh3fA98/mEQvqL7s+o4PlVM568Y=
+github.com/puriice/golibs v1.4.5 h1:6yerrJgZPs1mIzOLSUyrG+DYqlVSIkmY6XdxSsbG6X8=
+github.com/puriice/golibs v1.4.5/go.mod h1:NRCyQbkci6Zk29ZcQh3fA98/mEQvqL7s+o4PlVM568Y=
 github.com/rabbitmq/amqp091-go v1.10.0 h1:STpn5XsHlHGcecLmMFCtg7mqq0RnD+zFr4uzukfVhBw=
 github.com/rabbitmq/amqp091-go v1.10.0/go.mod h1:Hy4jKW5kQART1u+JkDTF9YYOQUHXqMuhrgxOEeS7G4o=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

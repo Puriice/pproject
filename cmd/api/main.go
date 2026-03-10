@@ -23,7 +23,13 @@ func main() {
 	}
 
 	serv := server.NewServer(host, port, database)
-	broker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), pproject.ExchangeName)
+	rabbit, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	broker, err := rabbit.Broker(pproject.ExchangeName)
 
 	if err != nil {
 		log.Fatal(err)

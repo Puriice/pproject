@@ -11,7 +11,7 @@ import (
 	"github.com/puriice/pproject/internal/repository"
 )
 
-func Register(s *server.Server, broker *messaging.RabbitMQ) {
+func Register(s *server.Server, broker *messaging.RabbitBroker) {
 	router := http.NewServeMux()
 
 	projectModel := repository.NewPostgresProjectRepository(s.Database)

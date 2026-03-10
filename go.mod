@@ -4,7 +4,7 @@ go 1.25.6
 
 require (
 	github.com/jackc/pgx/v5 v5.8.0
-	github.com/puriice/golibs v1.4.2
+	github.com/puriice/golibs v1.4.5
 )
 
 require (
